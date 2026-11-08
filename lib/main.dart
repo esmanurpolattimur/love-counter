@@ -11,6 +11,7 @@ import 'features/characters/character_growth_screen.dart';
 import 'features/characters/level_celebration_dialog.dart';
 import 'features/reminders/reminder_settings_screen.dart';
 import 'features/settings/settings_tools_screen.dart';
+import 'features/memories/photo_memories_screen.dart';
 
 // Central design tokens from the product specification.
 const background = Color(0xfffff8f5);
@@ -78,7 +79,7 @@ class _HomeState extends State<Home> {
   @override Widget build(BuildContext context) {
     if (date == null) return OnboardingScreen(onSave: save);
     if (!celebrationChecked) { celebrationChecked = true; WidgetsBinding.instance.addPostFrameCallback((_) => checkCelebration()); }
-    final pages = [HomeDashboard(names: names!, startDate: date!, onSettings: () => setState(() => tab = 3), onGrowth: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CharacterGrowthScreen(startDate: date!)))), const Memories(), SpecialDays(date: date!), Settings(names: names!, date: date!, first: first!, second: second!, onEdit: () => setState(() => date = null), onReminders: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReminderSettingsScreen())), onTools: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsToolsScreen())))];
+    final pages = [HomeDashboard(names: names!, startDate: date!, onSettings: () => setState(() => tab = 3), onGrowth: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CharacterGrowthScreen(startDate: date!)))), const PhotoMemoriesScreen(), SpecialDays(date: date!), Settings(names: names!, date: date!, first: first!, second: second!, onEdit: () => setState(() => date = null), onReminders: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReminderSettingsScreen())), onTools: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsToolsScreen())))];
     return Scaffold(body: pages[tab], bottomNavigationBar: NavigationBar(selectedIndex: tab, onDestinationSelected: (v) => setState(() => tab = v), destinations: const [NavigationDestination(icon: Icon(Icons.favorite_border), selectedIcon: Icon(Icons.favorite), label: 'Ana Sayfa'), NavigationDestination(icon: Icon(Icons.photo_library_outlined), selectedIcon: Icon(Icons.photo_library), label: 'Anılar'), NavigationDestination(icon: Icon(Icons.calendar_month_outlined), selectedIcon: Icon(Icons.calendar_month), label: 'Özel Günler'), NavigationDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: 'Ayarlar')]));
   }
 }
