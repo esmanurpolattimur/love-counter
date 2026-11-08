@@ -1,0 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class ReminderSettingsScreen extends StatefulWidget { const ReminderSettingsScreen({super.key}); @override State<ReminderSettingsScreen> createState() => _ReminderSettingsScreenState(); }
+class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
+  bool anniversary = true, birthday = true, special = true; int leadDays = 3;
+  @override void initState() { super.initState(); load(); }
+  Future<void> load() async { final p = await SharedPreferences.getInstance(); if (mounted) setState(() { anniversary = p.getBool('reminder_anniversary') ?? true; birthday = p.getBool('reminder_birthday') ?? true; special = p.getBool('reminder_special') ?? true; leadDays = p.getInt('reminder_lead') ?? 3; }); }
+  Future<void> save() async { final p = await SharedPreferences.getInstance(); await p.setBool('reminder_anniversary', anniversary); await p.setBool('reminder_birthday', birthday); await p.setBool('reminder_special', special); await p.setInt('reminder_lead', leadDays); if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Hatırlatıcı tercihleri kaydedildi.'))); }
+  @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('Hatırlatıcılar')), body: Padding(padding: const EdgeInsets.all(20), child: Column(children: [SwitchListTile(title: const Text('Yıldönümü'), subtitle: const Text('Yaklaşan yıldönümü hatırlatmaları'), value: anniversary, onChanged: (v) => setState(() => anniversary = v)), SwitchListTile(title: const Text('Doğum günü'), subtitle: const Text('Doğum günü geri sayımı'), value: birthday, onChanged: (v) => setState(() => birthday = v)), SwitchListTile(title: const Text('Özel günler'), subtitle: const Text('Eklediğin özel günler'), value: special, onChanged: (v) => setState(() => special = v)), const SizedBox(height: 12), SegmentedButton<int>(segments: const [ButtonSegment(value: 1, label: Text('1 gün')), ButtonSegment(value: 3, label: Text('3 gün')), ButtonSegment(value: 7, label: Text('7 gün'))], selected: {leadDays}, onSelectionChanged: (v) => setState(() => leadDays = v.first)), const Spacer(), FilledButton(onPressed: save, child: const Text('Kaydet'))])));
+}
