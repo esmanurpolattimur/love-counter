@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/theme/app_theme.dart';
+
 // Central design tokens from the product specification.
 const background = Color(0xfffff8f5);
 const blush = Color(0xfffbe5de);
@@ -42,7 +44,7 @@ class LoveApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
-    theme: ThemeData(useMaterial3: true, colorScheme: ColorScheme.fromSeed(seedColor: pink), scaffoldBackgroundColor: cream),
+    theme: AppTheme.light(),
     home: const Home(),
   );
 }
