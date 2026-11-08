@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aşk Sayacı – Önizleme</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: linear-gradient(135deg,#f9c9cf,#fff1df); font-family: Arial,sans-serif; color:#202020; }
+    .phone { width:min(390px,100vw); min-height:100vh; padding:24px; display:flex; flex-direction:column; background:linear-gradient(#ffe5e8,#fff8ed); }
+    h1 { font-size:25px; margin:0 0 18px; text-align:center; } .heart { text-align:center;font-size:24px;margin-top:-14px; }
+    label { font-size:14px;font-weight:700;display:block;margin:17px 0 7px; } input,.date { width:100%;border:0;border-radius:14px;padding:15px;background:#fff;box-shadow:0 3px 10px #c99a9a22;font-size:15px; }
+    .date { display:flex;justify-content:space-between;cursor:pointer; } .characters { display:flex;gap:11px;justify-content:space-around;margin:12px 0 26px; } .animal { border:2px solid transparent;border-radius:50%;background:#fff;width:60px;height:60px;font-size:32px;cursor:pointer; } .animal.chosen { border-color:#df7180;background:#ffe5e8; }
+    button { border:0;border-radius:24px;background:#df7180;color:white;padding:15px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 5px 10px #ba677c55; } .hidden{display:none!important}
+    .top { display:flex;align-items:center;gap:8px; } .top h2 { flex:1;margin:0;font-size:20px; } .icon { background:transparent;color:#222;box-shadow:none;padding:6px;font-size:21px; }
+    .spacer{flex:1}.pair{text-align:center;font-size:82px;margin:22px 0 7px}.days{text-align:center;font-size:40px;font-weight:900}.sub{text-align:center;margin-top:4px}.card{background:#fffdfc;border-radius:16px;padding:14px;box-shadow:0 5px 13px #87404b22;margin-top:17px}.timeTitle{text-align:center;font-size:17px;font-weight:bold}.time{display:flex;justify-content:space-around;text-align:center;margin-top:13px}.time b{font-size:21px;display:block}.time span{font-size:10px}.teaser{line-height:1.8;font-weight:bold}.nav{display:flex;justify-content:space-around;margin-top:auto;padding-top:20px}.nav button{background:transparent;color:#555;box-shadow:none;padding:8px;font-size:12px}.nav button.active{color:#df7180}.special{display:flex;gap:12px;align-items:center}.special .emoji{font-size:28px}.special strong{display:block}.special small{display:block;margin-top:3px}.bar{height:5px;background:#f2dadd;border-radius:10px;margin-top:9px}.bar i{display:block;width:58%;height:100%;background:#df7180;border-radius:10px}.setting{display:flex;gap:13px;align-items:center;margin-top:12px;cursor:pointer}.setting .sicon{font-size:24px}.setting strong,.setting small{display:block}.setting small{font-size:12px;margin-top:3px}.settingsSave{margin-top:auto}
+  </style>
+</head>
+<body>
+<main class="phone">
+  <section id="setup" class="hidden">
+    <h1>Aramıza Hoş Geldiniz!</h1><div class="heart">❤️</div>
+    <label>İsimleriniz</label><input id="names" value="Merve & Yiğit" placeholder="Merve & Yiğit">
+    <label>İlişki Başlangıç Tarihi</label><input id="start" type="date" value="2025-08-15">
+    <label style="text-align:center;margin-top:27px">Karakterlerinizi Seçin</label>
+    <div class="characters" id="first"><button class="animal chosen">🧸</button><button class="animal">🐰</button><button class="animal">🐱</button><button class="animal">🐶</button></div>
+    <div class="characters" id="second"><button class="animal">🧸</button><button class="animal chosen">🐰</button><button class="animal">🐱</button><button class="animal">🐶</button></div>
+    <button onclick="begin()">Başlat ❤️</button>
+  </section>
+  <section id="app" style="height:100%;display:flex;flex-direction:column;flex:1">
+    <div id="dashboard">
+      <div class="top"><h2 id="title">Merve & Yiğit</h2><button class="icon" onclick="show('settings')">⚙️</button></div>
+      <div class="spacer"></div><img id="growthFigure" src="file:///C:/Users/esman/OneDrive/Belgeler/ChatGPT/aşk%20sayacı/assets/images/growth_stage_4.png" alt="Büyüme evresi karakterleri" style="width:210px;height:210px;object-fit:contain;align-self:center"><div class="pair hidden" id="pair">🧸 🐰</div>
+      <div class="card" style="margin-top:0"><strong id="level">🌱 Büyüme Seviyesi: Lv. 1 · Yenidoğan</strong><div class="bar"><i id="growthBar"></i></div><small id="nextLevel">Sonraki evreye: 30 Gün Kaldı</small></div>
+      <div class="days" id="days">0 GÜN</div><div class="sub">Birlikte Geçen Zaman</div>
+      <div class="card"><div class="timeTitle" id="ymd">0 YIL, 0 AY, 0 GÜN</div><div class="time"><div><b id="hours">00</b><span>SAAT</span></div><div><b id="minutes">00</b><span>DAKİKA</span></div><div><b id="seconds">00</b><span>SANİYE</span></div></div></div>
+      <div class="card teaser">🎂 Doğum Gününe: Bilgi eklenmedi<br>💞 Yıldönümüne: Yakında</div>
+    </div>
+    <div id="specials" class="hidden"><div class="top"><h2>Özel Günlerimiz 🗓️</h2></div><div id="specialList"></div><button style="margin-top:22px" onclick="alert('Bu önizlemede özel gün ekleme yakında gelecek.')">Yeni Özel Gün Ekle ＋</button></div>
+    <div id="settings" class="hidden"><div class="top"><h2>Ayarlar ⚙️</h2></div><div class="card setting" onclick="show('setup')"><span class="sicon">👤</span><div><strong>İsimleri & Tarihi Düzenle</strong><small id="settingsNames"></small></div></div><div class="card setting" onclick="show('setup')"><span class="sicon">🐾</span><div><strong>Karakterleri Değiştir</strong><small id="settingsCharacters"></small></div></div><div class="card setting"><span class="sicon">🔔</span><div><strong>Bildirim Ayarları</strong><small>Yıldönümü ve doğum günü hatırlatıcıları</small></div></div><div class="card setting"><span class="sicon">🖼️</span><div><strong>Arka Planı Kişiselleştir</strong><small>Görsel seç</small></div></div><div class="card setting"><span class="sicon">💾</span><div><strong>Verileri Yedekle</strong><small>Veriler cihazınızda saklanır</small></div></div><button class="settingsSave" onclick="show('dashboard')">Kaydet ve Kapat</button></div>
+    <nav class="nav"><button class="active" data-page="dashboard" onclick="show('dashboard')">♥<br>Sayaç</button><button data-page="specials" onclick="show('specials')">▣<br>Özel Günler</button><button data-page="settings" onclick="show('settings')">⚙<br>Ayarlar</button></nav>
+  </section>
+</main>
+<script>
+  let first='🧸',second='🐰',startDate=new Date('2025-08-15T00:00:00');
+  document.querySelectorAll('.characters').forEach(group=>group.querySelectorAll('button').forEach(button=>button.onclick=()=>{group.querySelectorAll('button').forEach(x=>x.classList.remove('chosen'));button.classList.add('chosen');if(group.id==='first')first=button.textContent;else second=button.textContent;}));
+  function begin(){const n=document.querySelector('#names').value.trim(),d=document.querySelector('#start').value;if(!n||!d)return alert('Lütfen isimleri ve tarihi girin.');startDate=new Date(d+'T00:00:00');document.querySelector('#setup').classList.add('hidden');document.querySelector('#app').classList.remove('hidden');document.querySelector('#title').textContent=n;document.querySelector('#pair').textContent=first+' '+second;document.querySelector('#settingsNames').textContent=n+' | '+d.split('-').reverse().join('.');document.querySelector('#settingsCharacters').textContent=first+' & '+second;buildSpecials();tick();}
+  function tick(){if(!startDate)return;const x=new Date()-startDate,days=Math.floor(x/86400000),h=Math.floor(x/3600000)%24,m=Math.floor(x/60000)%60,s=Math.floor(x/1000)%60;document.querySelector('#days').textContent=days+' GÜN';document.querySelector('#ymd').textContent=Math.floor(days/365)+' YIL, '+Math.floor(days%365/30)+' AY, '+days%30+' GÜN';document.querySelector('#hours').textContent=String(h).padStart(2,'0');document.querySelector('#minutes').textContent=String(m).padStart(2,'0');document.querySelector('#seconds').textContent=String(s).padStart(2,'0');growth(days);setTimeout(tick,1000);}
+  function growth(days){let level=1,name='Yenidoğan',min=0,max=30;if(days>30){level=2;name='Çocukluk';min=31;max=180;}if(days>180){level=3;name='Gençlik';min=181;max=365;}if(days>365){level=4;name='Yetişkin';min=366;max=999999;}const percent=level===4?100:Math.round((days-min+1)/(max-min+1)*100);document.querySelector('#growthFigure').src='file:///C:/Users/esman/OneDrive/Belgeler/ChatGPT/aşk%20sayacı/assets/images/growth_stage_'+level+'.png';document.querySelector('#level').textContent='🌱 Büyüme Seviyesi: Lv. '+level+' · '+name+' (%'+percent+')';document.querySelector('#growthBar').style.width=percent+'%';document.querySelector('#nextLevel').textContent=level===4?'Yıldönümü evresindesiniz!': 'Sonraki evreye: '+(max-days+1)+' Gün Kaldı';}
+  function buildSpecials(){document.querySelector('#specialList').innerHTML=[['🌹','Sevgililer Günü','14 Şubat'],['🎄','Yılbaşı','1 Ocak'],['💐','Kadınlar Günü','8 Mart'],['💞','İlişki Yıldönümümüz',startDate.toLocaleDateString('tr-TR')]].map(x=>`<div class="card special"><span class="emoji">${x[0]}</span><div><strong>${x[1]}</strong><small>${x[2]} · Geri sayım yakında</small><div class="bar"><i></i></div></div></div>`).join('');}
+  function show(page){['dashboard','specials','settings'].forEach(x=>document.querySelector('#'+x).classList.toggle('hidden',x!==page));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='setup'){document.querySelector('#app').classList.add('hidden');document.querySelector('#setup').classList.remove('hidden');}}
+  document.querySelector('#settingsNames').textContent='Merve & Yiğit | 15.08.2025';
+  document.querySelector('#settingsCharacters').textContent='🧸 & 🐰';
+  buildSpecials(); tick();
+</script>
+</body></html>
