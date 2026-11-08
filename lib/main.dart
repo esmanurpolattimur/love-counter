@@ -60,26 +60,26 @@ class LoveApp extends StatelessWidget {
 
 class Home extends StatefulWidget { const Home({super.key}); @override State<Home> createState() => _HomeState(); }
 class _HomeState extends State<Home> {
-  String? names, first, second; DateTime? date; int tab = 0; Timer? timer; bool celebrationChecked = false;
+  String? names, first, second; DateTime? date, birthday; int tab = 0; Timer? timer; bool celebrationChecked = false;
   @override void initState() { super.initState(); load(); }
   @override void dispose() { timer?.cancel(); super.dispose(); }
   Future<void> load() async {
     final p = await SharedPreferences.getInstance();
     final saved = DateTime.tryParse(p.getString('date') ?? '');
-    if (saved != null) { names = p.getString('names'); date = saved; first = p.getString('first') ?? '🧸'; second = p.getString('second') ?? '🐰'; timer = Timer.periodic(const Duration(seconds: 1), (_) => mounted ? setState(() {}) : null); }
+    if (saved != null) { names = p.getString('names'); date = saved; birthday = DateTime.tryParse(p.getString('birthday') ?? ''); first = p.getString('first') ?? '🧸'; second = p.getString('second') ?? '🐰'; timer = Timer.periodic(const Duration(seconds: 1), (_) => mounted ? setState(() {}) : null); }
     if (mounted) setState(() {});
   }
-  Future<void> save(String n, DateTime d, String a, String b) async {
+  Future<void> save(String n, DateTime d, String a, String b, DateTime? birth) async {
     final p = await SharedPreferences.getInstance();
-    await p.setString('names', n); await p.setString('date', d.toIso8601String()); await p.setString('first', a); await p.setString('second', b);
-    setState(() { names = n; date = d; first = a; second = b; tab = 0; });
+    await p.setString('names', n); await p.setString('date', d.toIso8601String()); await p.setString('first', a); await p.setString('second', b); if (birth != null) await p.setString('birthday', birth.toIso8601String());
+    setState(() { names = n; date = d; birthday = birth; first = a; second = b; tab = 0; });
     timer ??= Timer.periodic(const Duration(seconds: 1), (_) => mounted ? setState(() {}) : null);
   }
   Future<void> checkCelebration() async { if (date == null) return; final prefs = await SharedPreferences.getInstance(); final current = GrowthStage.forDays(DateMath.calendarDaysBetween(date!, DateTime.now())); final seen = prefs.getInt('seen_growth_stage'); if (seen == null) { await prefs.setInt('seen_growth_stage', current.level); return; } if (current.level > seen && mounted) { await prefs.setInt('seen_growth_stage', current.level); await showLevelCelebration(context, level: current.level, name: current.name, reward: current.level == 4 ? 'Yıldönümü kalbi' : null); } }
   @override Widget build(BuildContext context) {
     if (date == null) return OnboardingScreen(onSave: save);
     if (!celebrationChecked) { celebrationChecked = true; WidgetsBinding.instance.addPostFrameCallback((_) => checkCelebration()); }
-    final pages = [HomeDashboard(names: names!, startDate: date!, onSettings: () => setState(() => tab = 3), onGrowth: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CharacterGrowthScreen(startDate: date!)))), const PhotoMemoriesScreen(), SpecialDays(date: date!), Settings(names: names!, date: date!, first: first!, second: second!, onEdit: () => setState(() => date = null), onReminders: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReminderSettingsScreen())), onTools: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsToolsScreen())))];
+    final pages = [HomeDashboard(names: names!, startDate: date!, onSettings: () => setState(() => tab = 3), onGrowth: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CharacterGrowthScreen(startDate: date!)))), const PhotoMemoriesScreen(), SpecialDays(date: date!), Settings(names: names!, date: date!, first: first!, second: second!, onEdit: () => setState(() => date = null), onReminders: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ReminderSettingsScreen(anniversaryDate: date!, birthdayDate: birthday))), onTools: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsToolsScreen())))];
     return Scaffold(body: pages[tab], bottomNavigationBar: NavigationBar(selectedIndex: tab, onDestinationSelected: (v) => setState(() => tab = v), destinations: const [NavigationDestination(icon: Icon(Icons.favorite_border), selectedIcon: Icon(Icons.favorite), label: 'Ana Sayfa'), NavigationDestination(icon: Icon(Icons.photo_library_outlined), selectedIcon: Icon(Icons.photo_library), label: 'Anılar'), NavigationDestination(icon: Icon(Icons.calendar_month_outlined), selectedIcon: Icon(Icons.calendar_month), label: 'Özel Günler'), NavigationDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: 'Ayarlar')]));
   }
 }

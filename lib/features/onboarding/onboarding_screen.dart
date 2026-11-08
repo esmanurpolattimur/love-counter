@@ -4,7 +4,7 @@ import '../../core/theme/app_colors.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key, required this.onSave});
-  final Future<void> Function(String, DateTime, String, String) onSave;
+  final Future<void> Function(String, DateTime, String, String, DateTime?) onSave;
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -36,7 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (step == 0 && names.text.trim().isEmpty) return _message('İsimleri yazın.');
     if (step == 1 && relationshipDate == null) return _message('İlişki başlangıç tarihini seçin.');
     if (step < 3) setState(() => step++);
-    else if (relationshipDate != null) widget.onSave(names.text.trim(), relationshipDate!, character1, character2);
+    else if (relationshipDate != null) widget.onSave(names.text.trim(), relationshipDate!, character1, character2, birthday);
   }
 
   void _message(String text) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
