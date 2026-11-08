@@ -5,10 +5,11 @@ import '../../core/utils/date_math.dart';
 import '../../core/widgets/soft_card.dart';
 
 class HomeDashboard extends StatelessWidget {
-  const HomeDashboard({super.key, required this.names, required this.startDate, required this.onSettings});
+  const HomeDashboard({super.key, required this.names, required this.startDate, required this.onSettings, required this.onGrowth});
   final String names;
   final DateTime startDate;
   final VoidCallback onSettings;
+  final VoidCallback onGrowth;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +30,13 @@ class HomeDashboard extends StatelessWidget {
         const SizedBox(height: 8),
         Image.asset('assets/images/growth_stage_${stage.level}.png', height: 190, fit: BoxFit.contain),
         const SizedBox(height: 8),
-        SoftCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        InkWell(onTap: onGrowth, borderRadius: BorderRadius.circular(18), child: SoftCard(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Text('🌱 Büyüme Seviyesi: Lv. ${stage.level} · ${stage.name}', style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.burgundy)),
           const SizedBox(height: 9),
           LinearProgressIndicator(value: stageProgress, minHeight: 8, borderRadius: BorderRadius.circular(9), color: AppColors.rose, backgroundColor: AppColors.peach),
           const SizedBox(height: 7),
           Text(remaining == null ? 'Yıldönümü evresindesiniz.' : 'Sonraki evreye: $remaining gün kaldı', style: const TextStyle(color: AppColors.textSecondary)),
-        ])),
+        ]))),
         const SizedBox(height: 20),
         const Text('BİRLİKTE GEÇEN SÜRE', style: TextStyle(letterSpacing: 1.3, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
         Text('$totalDays Gün', style: Theme.of(context).textTheme.headlineLarge),
