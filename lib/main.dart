@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/theme/app_theme.dart';
+import 'features/onboarding/onboarding_screen.dart';
 
 // Central design tokens from the product specification.
 const background = Color(0xfffff8f5);
@@ -67,7 +68,7 @@ class _HomeState extends State<Home> {
     timer ??= Timer.periodic(const Duration(seconds: 1), (_) => mounted ? setState(() {}) : null);
   }
   @override Widget build(BuildContext context) {
-    if (date == null) return Setup(onSave: save);
+    if (date == null) return OnboardingScreen(onSave: save);
     final pages = [Dashboard(names: names!, date: date!, first: first!, second: second!, onSettings: () => setState(() => tab = 3)), const Memories(), SpecialDays(date: date!), Settings(names: names!, date: date!, first: first!, second: second!, onEdit: () => setState(() => date = null))];
     return Scaffold(body: pages[tab], bottomNavigationBar: NavigationBar(selectedIndex: tab, onDestinationSelected: (v) => setState(() => tab = v), destinations: const [NavigationDestination(icon: Icon(Icons.favorite_border), selectedIcon: Icon(Icons.favorite), label: 'Ana Sayfa'), NavigationDestination(icon: Icon(Icons.photo_library_outlined), selectedIcon: Icon(Icons.photo_library), label: 'Anılar'), NavigationDestination(icon: Icon(Icons.calendar_month_outlined), selectedIcon: Icon(Icons.calendar_month), label: 'Özel Günler'), NavigationDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: 'Ayarlar')]));
   }
